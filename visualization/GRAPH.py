@@ -47,6 +47,7 @@ nodes_name = []
 edges = []
 yellow_edges = []
 blue_edges = []
+weight_edges = []
 color = [node2,node1,node3]
 node_color = []
 pos = (-1,-1)
@@ -244,6 +245,13 @@ def show_nodes():
     if(len(nodes)==0): return
     for i in range(len(nodes)):
         screen.blit(node_color[i],nodes[i])
+
+def show_weight_edges():
+    if(len(edges)==0): return
+    for i in range(len(edges)):
+        # write node text
+        text_surface = msg_font.render(weight_edges[i], True, (0, 0, 0))
+        screen.blit(text_surface, ((nodes[edges[i][0]][0]+16 + nodes[edges[i][1]][0]+16) / 2, (nodes[edges[i][0]][1]+16 + nodes[edges[i][1]][1]+16) / 2))
 def show_nodes_name():
     if(len(nodes)==0): return
     for i in range(len(nodes)):
@@ -278,7 +286,7 @@ def show_msg():
     
     
 def run():
-    global screen, nodes, edges, yellow_edges, blue_edges, color, node_color,pos, pointA, pointB, point, state, node_button, edge_button, msg, user_text
+    global screen, nodes, edges, yellow_edges, blue_edges, color, node_color,pos, pointA, pointB, point, state, node_button, edge_button, msg, user_text, weight_edges
     running = True
 
     while running:
@@ -364,6 +372,8 @@ def run():
                             nodes.clear()
                             node_color.clear()
                             edges.clear()
+                            nodes_name.clear()
+                            weight_edges.clear()
                     elif state == 'add_node':
                         if pos[0]>200 and pos[1]<550:
                             node_color.append(color[0])
@@ -383,7 +393,7 @@ def run():
                         pointA = getNode(pos[0],pos[1])
                         if(pointA != -1):
                             state = 'add_edge2'
-                            msg = 'Chọn nhà máy đích kết thúc đường đi.'
+                            msg = 'Chọn nhà máy bắt đầu đường đi.'
                         if(isClicked(5,42,5+edge_button.get_width(),42+edge_button.get_height(),pos[0],pos[1])):
                             state = 'start'
                             msg = ''
@@ -393,9 +403,14 @@ def run():
                             edges.append((pointA,pointB))
                             edges.append((pointB,pointA))
                             state = 'add_edge1'
-                            msg = 'Chọn nhà máy đích kết thúc đường đi.'
+                            msg = 'Chọn nhà máy kết thúc đường đi.'
                             pointA = -1
                             pointB = -1
+
+                            user_text = write_text(pygame, screen, user_text, 'Nhập độ dài đường đi')
+                            weight_edges.append(user_text)
+                            weight_edges.append(user_text)
+                            user_text = ''
                         if(isClicked(5,42,5+edge_button.get_width(),42+edge_button.get_height(),pos[0],pos[1])):
                             state = 'start'
                             msg = ''
@@ -414,6 +429,8 @@ def run():
                             make_equal(node_color,temp_node)
                             yellow_edges.clear()
                             blue_edges.clear()
+                            nodes_name.clear()
+                            weight_edges.clear()
                             state = 'start'
                             msg = ''
                 pos = (-1,-1)
@@ -421,6 +438,7 @@ def run():
         show_edges()
         show_nodes()
         show_nodes_name()
+        show_weight_edges()
         pygame.display.update()
         clock.tick(60)
         
