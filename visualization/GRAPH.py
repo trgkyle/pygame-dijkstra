@@ -43,6 +43,7 @@ msg_box = msg_font.render('', True, BLUE);
 node_button = plus
 edge_button = add
 nodes = []
+nodes_name = []
 edges = []
 yellow_edges = []
 blue_edges = []
@@ -54,7 +55,7 @@ pointB = -1
 point = -1
 state = 'start'
 msg = ''
-
+user_text = ''
 # def add_name_of_node(s,x,y,text):
 #     global screen,nodes
 #     font = pygame.font.Font('roboto.ttf', 20)
@@ -243,7 +244,12 @@ def show_nodes():
     if(len(nodes)==0): return
     for i in range(len(nodes)):
         screen.blit(node_color[i],nodes[i])
-
+def show_nodes_name():
+    if(len(nodes)==0): return
+    for i in range(len(nodes)):
+        # write node text
+        text_surface = msg_font.render(nodes_name[i], True, (0, 0, 0))
+        screen.blit(text_surface, (nodes[i][0], nodes[i][1] + 30))
 def show_edges():
     if(len(edges)==0): return
     for i in range(len(edges)):
@@ -272,7 +278,7 @@ def show_msg():
     
     
 def run():
-    global screen, nodes, edges, yellow_edges, blue_edges, color, node_color,pos, pointA, pointB, point, state, node_button, edge_button, msg
+    global screen, nodes, edges, yellow_edges, blue_edges, color, node_color,pos, pointA, pointB, point, state, node_button, edge_button, msg, user_text
     running = True
 
     while running:
@@ -360,12 +366,15 @@ def run():
                             edges.clear()
                     elif state == 'add_node':
                         if pos[0]>200 and pos[1]<550:
-                            nodes.append((pos[0]-16,pos[1]-16))
                             node_color.append(color[0])
+                            user_text = write_text(pygame, screen, user_text, 'Nhập tên nhà máy')
+                            nodes.append((pos[0]-16,pos[1]-16))
+                            nodes_name.append(user_text)
+                            user_text = ''
+                            
+                            state = 'add_node'
+                            msg = ''
                         if(isClicked(5,5,5+node_button.get_width(),5+node_button.get_height(),pos[0],pos[1])):
-                            # print("move to write text")
-                            # state = 'write text'
-                            # msg = 'Nhập khoảng cách giữa hai nhà máy.'
                             state = 'start'
                             msg = ''
                     elif state == 'add_name_of_node':
@@ -400,8 +409,6 @@ def run():
                         if point != -1:
                             state = 'bfs'
                             msg = ''
-                    elif state == 'write text':
-                        write_text(screen)
                     elif state == 'exit':
                         if(isClicked(5,5,5+node_button.get_width(),5+node_button.get_height(),pos[0],pos[1])):
                             make_equal(node_color,temp_node)
@@ -413,6 +420,7 @@ def run():
                 
         show_edges()
         show_nodes()
+        show_nodes_name()
         pygame.display.update()
         clock.tick(60)
         
