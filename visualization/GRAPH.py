@@ -267,12 +267,12 @@ def show_buttons():
         screen.blit(find_bridges_button,(7+algo_button.get_width()/2-50,394+algo_button.get_height()/2-13))
         
 def show_msg():
-    msg_box = msg_font.render(msg, True, BLUE);
+    msg_box = msg_font.render(msg, True, BLUE)
     screen.blit(msg_box,(215,570))
     
     
 def run():
-    global screen, nodes, state, node_button, edge_button
+    global screen, nodes, edges, yellow_edges, blue_edges, color, node_color,pos, pointA, pointB, point, state, node_button, edge_button, msg
     running = True
 
     while running:
@@ -363,6 +363,9 @@ def run():
                             nodes.append((pos[0]-16,pos[1]-16))
                             node_color.append(color[0])
                         if(isClicked(5,5,5+node_button.get_width(),5+node_button.get_height(),pos[0],pos[1])):
+                            # print("move to write text")
+                            # state = 'write text'
+                            # msg = 'Nhập khoảng cách giữa hai nhà máy.'
                             state = 'start'
                             msg = ''
                     elif state == 'add_name_of_node':
@@ -373,10 +376,8 @@ def run():
                             state = 'add_edge2'
                             msg = 'Chọn nhà máy đích kết thúc đường đi.'
                         if(isClicked(5,42,5+edge_button.get_width(),42+edge_button.get_height(),pos[0],pos[1])):
-                            state = 'write text'
-                            msg = 'Nhập khoảng cách giữa hai nhà máy.'
-                            # state = 'start'
-                            # msg = ''
+                            state = 'start'
+                            msg = ''
                     elif state == 'add_edge2':
                         pointB = getNode(pos[0],pos[1])
                         if pointB != -1 and pointB != pointA:
@@ -389,7 +390,7 @@ def run():
                         if(isClicked(5,42,5+edge_button.get_width(),42+edge_button.get_height(),pos[0],pos[1])):
                             state = 'start'
                             msg = ''
-                    elif state == 'Chọn điểm bắt đầu chạy thuật toán dfs':
+                    elif state == 'choose start point for dfs':
                         point  = getNode(pos[0],pos[1])
                         if point != -1:
                             state = 'dfs'
