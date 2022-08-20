@@ -1,1 +1,1 @@
-# Phần mềm hiển thị mô phỏng chạy thuật toán Dijkstra
+# Phần mềm hiển thị mô phỏng chạy thuật toán Dijkstra sử dụng PyGame
