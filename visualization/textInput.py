@@ -15,7 +15,6 @@ def write_text(pygame, screen,user_text_init, title):
 	color = color_passive
 
 	active = True
-	print("Go")
 	clock = pygame.time.Clock()
  
 	while True:
