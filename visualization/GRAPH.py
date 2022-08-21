@@ -46,12 +46,11 @@ nodes = [(217, 137), (333, 17), (438, 135), (324, 260),
          (572, 15), (564, 260), (671, 141)]
 nodes_name = ['NMN. sông Hồng', 'NMN. Cáo Đỉnh', 'NMN. Ngọc Hà',
               'NMN. Mai Dịch', 'NMN. Yên Phụ', 'NMN. Ngô Sỹ Liên', 'NMN. Lương Yên']
-edges = [(0, 1), (1, 0), (0, 3), (3, 0), (0, 2), (2, 0), (3, 2), (2, 3), (2, 4), (4, 2),
-         (2, 5), (5, 2), (5, 6), (6, 5), (4, 6), (6, 4), (1, 2), (2, 1), (3, 5), (5, 3)]
+edges = [(0, 1), (0, 3), (0, 2), (3, 2), (2, 4),
+         (2, 5), (5, 6), (4, 6), (1, 2), (3, 5)]
 yellow_edges = []
 blue_edges = []
-weight_edges = [14.1, 14.1, 16.8, 16.8, 18.6, 18.6, 2.4, 2.4, 5.2,
-                5.2, 4.3, 4.3, 5.4, 5.4, 5.3, 5.3, 6.3, 6.3, 7.8, 7.8]
+weight_edges = [14.1, 16.8, 18.6, 2.4, 5.2, 4.3, 5.4, 5.3, 6.3, 7.8]
 color = [node2, node1, node3]
 node_color = [color[0], color[0], color[0],
               color[0], color[0], color[0], color[0]]
@@ -70,6 +69,7 @@ user_text = ''
 #     pygame.display.update()
 #     pygame.time.delay(200)
 
+
 def dijkstra(pointA, pointB, dis, adj):
     print("start dijkstra")
     # vis[s] = 1
@@ -87,6 +87,7 @@ def dijkstra(pointA, pointB, dis, adj):
     #         pygame.display.update()
     #         pygame.time.delay(200)
     #         dfs(adj[s][i], vis, adj)
+
 
 def dfs(s, vis, adj):
     vis[s] = 1
@@ -157,6 +158,7 @@ def start_bfs(point):
         adj[edges[i][0]].append(edges[i][1])
     bfs(point, dis, adj)
 
+
 def start_dijkstra(pointA, pointB):
     if(len(nodes) == 0 or len(edges) == 0):
         return
@@ -172,6 +174,7 @@ def start_dijkstra(pointA, pointB):
     print("Khoảng cách của các điểm mà nó được kết nối tới (ứng với trị ví mảng):")
     print(dis)
     dijkstra(pointA, pointB, dis, adj)
+
 
 def find_bridges(u, counter, dfs_num, dfs_low, par, adj):
     counter = counter + 1
@@ -399,7 +402,7 @@ def run():
             yellow_edges.clear()
             state = 'start'
             point = -1
-        
+
         if state == 'dijkstra':
             temp_node = [color[0] for i in range(len(node_color))]
             make_equal(temp_node, node_color)
