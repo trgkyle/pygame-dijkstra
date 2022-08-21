@@ -16,7 +16,7 @@ BLACK = (0, 0, 0)
 YELLOW = (255, 255, 0)
 BLUE = (0, 0, 255)
 
-screen = pygame.display.set_mode((800, 600))
+screen = pygame.display.set_mode((1000, 600))
 pygame.display.set_caption("Dijkstra algorithm!")
 
 left_background = pygame.image.load('visualization/background.png')
@@ -53,6 +53,8 @@ state = 'start'
 msg = ''
 user_text = ''
 
+def showNodeName(index):
+    return nodes_name[index]
 
 def dijkstra(pointA, pointB, dis, adj, adj_from_pointA, dis_from_pointA):
     if(pointA == pointB):
@@ -104,10 +106,13 @@ def dijkstra(pointA, pointB, dis, adj, adj_from_pointA, dis_from_pointA):
     if(len(adj_from_pointA[pointB]) == 0):
         msg = 'Không có đường đi!'
     else:
+        best_route = str([nodes_name[index] for index in adj_from_pointA[pointB]])
+        best_price = str(round(dis_from_pointA[pointB],2))
+        msg = 'Đường đi: ' + best_route + '\n' + 'Khoảng cách tối ưu: ' + str(best_price)
         print('Return best route: ')
-        print(adj_from_pointA[pointB])
-        print('price to go to best route: ')
-        print(dis_from_pointA[pointB])
+        print(best_route)
+        print('Total price to go to best route: ')
+        print(best_price)
 
 def dfs(s, vis, adj):
     vis[s] = 1
