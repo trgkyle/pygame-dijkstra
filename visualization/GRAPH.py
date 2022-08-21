@@ -23,25 +23,16 @@ left_background = pygame.image.load('visualization/background.png')
 node1 = pygame.image.load('visualization/r_circle.png')
 node2 = pygame.image.load('visualization/b_circle.png')
 node3 = pygame.image.load('visualization/y_circle.png')
-plus = pygame.image.load('visualization/plus.png')
-add = pygame.image.load('visualization/add.png')
 cross = pygame.image.load('visualization/cross.png')
 algo_button = pygame.image.load('visualization/algo_button.png')
 
 button_font = pygame.font.Font('visualization/roboto.ttf', 20)
 msg_font = pygame.font.Font('visualization/roboto.ttf', 15)
 
-add_node = button_font.render('Thêm nhà máy', True, WHITE)
-add_edge = button_font.render('Nối đường đi', True, WHITE)
-dfs_button = button_font.render('DFS', True, WHITE)
-bfs_button = button_font.render('BFS', True, WHITE)
-dijkstra_button = button_font.render('Điểm đi, Điểm đến', True, WHITE)
-find_bridges_button = button_font.render('Find Bridges', True, WHITE)
-clear_button = button_font.render('Đặt lại toàn bộ', True, WHITE)
+dijkstra_button = button_font.render('Choose', True, WHITE)
+go_button = button_font.render('Go', True, WHITE)
 msg_box = msg_font.render('', True, BLUE)
 
-node_button = plus
-edge_button = add
 nodes = [(217, 137), (333, 17), (438, 135), (324, 260),
          (572, 15), (564, 260), (671, 141)]
 nodes_name = ['NMN. sông Hồng', 'NMN. Cáo Đỉnh', 'NMN. Ngọc Hà',
@@ -71,25 +62,38 @@ user_text = ''
 
 
 def dijkstra(pointA, pointB, dis, adj):
+    if(pointA == pointB):
+        return
+    level = 0
+    q = queue.Queue()
+    q.put((level, pointA))
+    global screen, nodes
     node_color[pointA] = color[1]
     show_edges()
     show_nodes()
     show_nodes_name()
     show_weight_edges()
     pygame.display.update()
-    pygame.time.delay(500)
-    
-    if(pointA == pointB):
-        return
-    for i in range(len(adj[pointA])):
-        if dis[adj[pointA][i]] != 1:
-            yellow_edges.append((pointA, adj[pointA][i]))
-            yellow_edges.append((adj[pointA][i], pointA))
-            show_edges()
-            show_nodes()
-            pygame.display.update()
-            pygame.time.delay(200)
-            dijkstra(adj[pointA][i], pointB, dis, adj)
+    pygame.time.delay(200)
+
+    while not q.empty():
+        f = q.queue[0]
+        if(f[0] == (level+1) % 2):
+            level = (level+1) % 2
+            continue
+        q.get()
+        u = f[1]
+        for i in range(len(adj[u])):
+            if dis[adj[u][i]] == 1e9:
+                yellow_edges.append((u, adj[u][i]))
+                yellow_edges.append((adj[u][i], u))
+                node_color[adj[u][i]] = color[1]
+                show_edges()
+                show_nodes()
+                pygame.display.update()
+                pygame.time.delay(200)
+                dis[adj[u][i]] = dis[u] + 1
+                q.put(((level+1) % 2, adj[u][i]))
 
 
 def dfs(s, vis, adj):
@@ -345,17 +349,8 @@ def show_buttons():
         screen.blit(dijkstra_button, (7+algo_button.get_width() /
                     2-70, 342+algo_button.get_height()/2-13))
         screen.blit(algo_button, (7, 550))
-        screen.blit(clear_button, (7+algo_button.get_width() /
+        screen.blit(go_button, (7+algo_button.get_width() /
                     2-53, 550+algo_button.get_height()/2-13))
-        screen.blit(algo_button, (7, 498))
-        screen.blit(dfs_button, (7+algo_button.get_width() /
-                    2-20, 498+algo_button.get_height()/2-13))
-        screen.blit(algo_button, (7, 446))
-        screen.blit(bfs_button, (7+algo_button.get_width() /
-                    2-20, 446+algo_button.get_height()/2-13))
-        screen.blit(algo_button, (7, 394))
-        screen.blit(find_bridges_button, (7+algo_button.get_width() /
-                    2-50, 394+algo_button.get_height()/2-13))
 
 
 def show_msg():
@@ -371,22 +366,9 @@ def run():
         screen.fill(WHITE)
         screen.blit(left_background, (0, 0))
 
-        if(state == 'start' or state == 'add_node' or state == 'exit'):
-            screen.blit(node_button, (5, 5))
-
-        if(state == 'start' or state == 'add_edge1' or state == 'add_edge2'):
-            screen.blit(edge_button, (5, 42))
-
         show_buttons()
         show_msg()
 
-        if state == 'start':
-            node_button = plus
-            edge_button = add
-            if(ishovering(5, 5, 5+node_button.get_width(), 5+node_button.get_height())):
-                screen.blit(add_node, (60, 12))
-            if(ishovering(5, 42, 5+edge_button.get_width(), 42+edge_button.get_height())):
-                screen.blit(add_edge, (60, 48))
 
         if state == 'dfs':
             temp_node = [color[0] for i in range(len(node_color))]
@@ -436,41 +418,13 @@ def run():
                             else:
                                 state = 'start'
                                 msg = 'Phải có tối thiểu 2 điểm.'
-                        if(isClicked(7, 498, 7+algo_button.get_width(), 498+algo_button.get_height(), pos[0], pos[1])):
-                            if len(nodes) != 0:
-                                state = 'choose start point for dfs'
-                                msg = 'Chọn điểm bắt đầu cho thuật toán Depth First Search.'
-                            else:
-                                state = 'start'
-                        elif(isClicked(5, 5, 5+node_button.get_width(), 5+node_button.get_height(), pos[0], pos[1])):
-                            state = 'add_node'
-                            msg = 'Chọn vào màn hình để thêm nhà máy.'
-                            node_button = cross
-                            edge_button = cross
-                        elif(isClicked(5, 42, 5+edge_button.get_width(), 42+edge_button.get_height(), pos[0], pos[1])):
-                            msg = 'Chọn điểm bắt đầu thực hiện đặt khoảng cách.'
-                            state = 'add_edge1'
-                            node_button = cross
-                            edge_button = cross
-                        elif(isClicked(7, 446, 7+algo_button.get_width(), 446+algo_button.get_height(), pos[0], pos[1])):
-                            if len(nodes) != 0:
-                                state = 'choose start point for bfs'
-                                msg = 'Chọn điểm bắt đầu cho thuật toán Breadth First Search.'
-                            else:
-                                state = 'start'
-                        elif(isClicked(7, 394, 7+algo_button.get_width(), 394+algo_button.get_height(), pos[0], pos[1])):
-                            if len(nodes) != 0:
-                                node_button = cross
-                                state = 'find_bridges'
-                                msg = 'Giải thích: Vùng tròn màu vàng thể hiện nhà máy   Đường đi: đường kẻ màu xanh'
-                            else:
-                                state = 'start'
                         elif(isClicked(7, 550, 7+algo_button.get_width(), 550+algo_button.get_height(), pos[0], pos[1])):
-                            nodes.clear()
-                            node_color.clear()
-                            edges.clear()
-                            nodes_name.clear()
-                            weight_edges.clear()
+                            if pointA != -1 and pointB != -1:
+                                state = 'dijkstra'
+                                msg = 'Bắt đầu chạy thuật toán dijkstra.'
+                            else:
+                                state = 'start'
+                                msg = 'Phải có tối thiểu 2 điểm.'
                     elif state == 'add_node':
                         if pos[0] > 200 and pos[1] < 550:
                             node_color.append(color[0])
@@ -531,8 +485,8 @@ def run():
                     elif state == 'choose end point for dijkstra':
                         pointB = getNode(pos[0], pos[1])
                         if pointB != -1:
-                            state = 'dijkstra'
-                            msg = 'Bắt đầu tìm đường đi'
+                            state = 'start'
+                            msg = 'Đã hoàn thành chọn điểm'
                     elif state == 'exit':
                         if(isClicked(5, 5, 5+node_button.get_width(), 5+node_button.get_height(), pos[0], pos[1])):
                             make_equal(node_color, temp_node)
