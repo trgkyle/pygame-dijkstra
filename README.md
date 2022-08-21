@@ -1,5 +1,5 @@
 # Phần mềm hiển thị mô phỏng chạy thuật toán Dijkstra sử dụng PyGame
-## Hướng dẫn cách chạy Project cho ai đấy chưa biết gì nhưng mà cần vì ngày mai thi =)))
+## Hướng dẫn cách chạy Project cho ai đấy
 
 ```
 python3 main.py
