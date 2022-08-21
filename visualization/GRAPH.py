@@ -52,13 +52,6 @@ point = -1
 state = 'start'
 msg = ''
 user_text = ''
-# def add_name_of_node(s,x,y,text):
-#     global screen,nodes
-#     font = pygame.font.Font('roboto.ttf', 20)
-#     text = font.render(text, True, WHITE)
-#     screen.blit(text,(x,y))
-#     pygame.display.update()
-#     pygame.time.delay(200)
 
 
 def dijkstra(pointA, pointB, dis, adj):
@@ -67,7 +60,7 @@ def dijkstra(pointA, pointB, dis, adj):
     level = 0
     q = queue.Queue()
     q.put((level, pointA))
-    global screen, nodes
+    global screen, nodes, msg
     node_color[pointA] = color[1]
     show_edges()
     show_nodes()
@@ -84,17 +77,15 @@ def dijkstra(pointA, pointB, dis, adj):
         q.get()
         u = f[1]
         for i in range(len(adj[u])):
-            if dis[adj[u][i]] == 1e9:
-                yellow_edges.append((u, adj[u][i]))
-                yellow_edges.append((adj[u][i], u))
-                node_color[adj[u][i]] = color[1]
-                show_edges()
-                show_nodes()
-                pygame.display.update()
-                pygame.time.delay(200)
-                dis[adj[u][i]] = dis[u] + 1
-                q.put(((level+1) % 2, adj[u][i]))
-
+            yellow_edges.append((u, adj[u][i]))
+            node_color[adj[u][i]] = color[1]
+            show_edges()
+            show_nodes()
+            pygame.display.update()
+            pygame.time.delay(200)
+            # dis[adj[u][i]] = dis[u] + 1
+            q.put(((level+1) % 2, adj[u][i]))
+    msg = 'Hoàn thành tìm đường đi!'
 
 def dfs(s, vis, adj):
     vis[s] = 1
@@ -174,11 +165,11 @@ def start_dijkstra(pointA, pointB):
     for i in range(len(edges)):
         adj[edges[i][0]].append(edges[i][1])
         dis[edges[i][0]].append(weight_edges[i])
-    print("Cách cạnh nối tới các điểm đến:")
+    print("Cách cạnh nối tới các điểm đến <edges>:")
     print(edges)
-    print("Các điểm mà nó được kết nối tới (ứng với trị ví mảng):")
+    print("Các điểm mà nó được kết nối tới (ứng với trị ví mảng) <adj>:")
     print(adj)
-    print("Khoảng cách của các điểm mà nó được kết nối tới (ứng với trị ví mảng):")
+    print("Khoảng cách của các điểm mà nó được kết nối tới (ứng với trị ví mảng) <dis>:")
     print(dis)
     dijkstra(pointA, pointB, dis, adj)
 
