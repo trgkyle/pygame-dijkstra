@@ -7,16 +7,16 @@ Created on Fri Jul 17 11:38:45 2020
 from platform import node
 import pygame
 import queue
-from .textInput import write_text 
+from .textInput import write_text
 clock = pygame.time.Clock()
 pygame.init()
 
-WHITE = (255,255,255)
-BLACK = (0,0,0)
-YELLOW = (255,255,0)
-BLUE = (0,0,255)
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+YELLOW = (255, 255, 0)
+BLUE = (0, 0, 255)
 
-screen = pygame.display.set_mode((800,600))
+screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Mô hình khoảng cách nhà máy!")
 
 left_background = pygame.image.load('visualization/background.png')
@@ -33,24 +33,29 @@ msg_font = pygame.font.Font('visualization/roboto.ttf', 15)
 
 add_node = button_font.render('Thêm nhà máy', True, WHITE)
 add_edge = button_font.render('Nối đường đi', True, WHITE)
-dfs_button = button_font.render('DFS', True, WHITE) 
+dfs_button = button_font.render('DFS', True, WHITE)
 bfs_button = button_font.render('BFS', True, WHITE)
 dijkstra_button = button_font.render('Dijkstra', True, WHITE)
 find_bridges_button = button_font.render('Find Bridges', True, WHITE)
-clear_button = button_font.render('Đặt lại toàn bộ', True, WHITE) 
-msg_box = msg_font.render('', True, BLUE);
+clear_button = button_font.render('Đặt lại toàn bộ', True, WHITE)
+msg_box = msg_font.render('', True, BLUE)
 
 node_button = plus
 edge_button = add
-nodes = [(217, 137), (333, 17), (438, 135), (324, 260), (572, 15), (564, 260), (671, 141)]
-nodes_name = ['NMN. song Hồng', 'NMN. Cáo Đỉnh', 'NMC. Ngọc Hà', 'NMC. Mai Dịch', 'NMC. Yên Phụ', 'NMC. Ngô Sỹ Liên', 'NMC. Lương Yên']
-edges = [(0, 1), (1, 0), (0, 3), (3, 0), (0, 2), (2, 0), (3, 2), (2, 3), (2, 4), (4, 2), (2, 5), (5, 2), (5, 6), (6, 5), (4, 6), (6, 4), (1, 2), (2, 1), (3, 5), (5, 3)]
+nodes = [(217, 137), (333, 17), (438, 135), (324, 260),
+         (572, 15), (564, 260), (671, 141)]
+nodes_name = ['NMN. song Hồng', 'NMN. Cáo Đỉnh', 'NMC. Ngọc Hà',
+              'NMC. Mai Dịch', 'NMC. Yên Phụ', 'NMC. Ngô Sỹ Liên', 'NMC. Lương Yên']
+edges = [(0, 1), (1, 0), (0, 3), (3, 0), (0, 2), (2, 0), (3, 2), (2, 3), (2, 4), (4, 2),
+         (2, 5), (5, 2), (5, 6), (6, 5), (4, 6), (6, 4), (1, 2), (2, 1), (3, 5), (5, 3)]
 yellow_edges = []
 blue_edges = []
-weight_edges = ['14.1', '14.1', '16.8', '16.8', '18.6', '18.6', '2.4', '2.4', '5.2', '5.2', '4.3', '4.3', '5.4', '5.4', '5.3', '5.3', '6.3', '6.3', '7.8', '7.8']
-color = [node2,node1,node3]
-node_color = [color[0], color[0], color[0], color[0], color[0], color[0], color[0]]
-pos = (-1,-1)
+weight_edges = ['14.1', '14.1', '16.8', '16.8', '18.6', '18.6', '2.4', '2.4', '5.2',
+                '5.2', '4.3', '4.3', '5.4', '5.4', '5.3', '5.3', '6.3', '6.3', '7.8', '7.8']
+color = [node2, node1, node3]
+node_color = [color[0], color[0], color[0],
+              color[0], color[0], color[0], color[0]]
+pos = (-1, -1)
 pointA = -1
 pointB = -1
 point = -1
@@ -65,7 +70,8 @@ user_text = ''
 #     pygame.display.update()
 #     pygame.time.delay(200)
 
-def dfs(s,vis,adj):
+
+def dfs(s, vis, adj):
     vis[s] = 1
     node_color[s] = color[1]
     show_edges()
@@ -74,122 +80,127 @@ def dfs(s,vis,adj):
     pygame.time.delay(200)
     for i in range(len(adj[s])):
         if vis[adj[s][i]] != 1:
-            yellow_edges.append((s,adj[s][i]))
-            yellow_edges.append((adj[s][i],s))
+            yellow_edges.append((s, adj[s][i]))
+            yellow_edges.append((adj[s][i], s))
             show_edges()
             show_nodes()
             pygame.display.update()
             pygame.time.delay(200)
-            dfs(adj[s][i],vis,adj)
+            dfs(adj[s][i], vis, adj)
+
 
 def start_dfs(point):
-    if(len(nodes)==0 or len(edges)==0):
+    if(len(nodes) == 0 or len(edges) == 0):
         return
     adj = [[] for i in range(len(nodes))]
     vis = [0 for i in range(len(nodes))]
     for i in range(len(edges)):
         adj[edges[i][0]].append(edges[i][1])
-    dfs(point,vis,adj)
+    dfs(point, vis, adj)
 
-def bfs(s,dis,adj):
+
+def bfs(s, dis, adj):
     level = 0
     q = queue.Queue()
-    q.put((level,s))
-    global screen,nodes
+    q.put((level, s))
+    global screen, nodes
     dis[s] = 0
     node_color[s] = color[1]
     show_edges()
     show_nodes()
     pygame.display.update()
     pygame.time.delay(200)
-    
+
     while not q.empty():
-        f = q.queue[0];
-        if(f[0] == (level+1)%2):
-            level = (level+1)%2
+        f = q.queue[0]
+        if(f[0] == (level+1) % 2):
+            level = (level+1) % 2
             continue
         q.get()
         u = f[1]
         for i in range(len(adj[u])):
             if dis[adj[u][i]] == 1e9:
-                yellow_edges.append((u,adj[u][i]))
-                yellow_edges.append((adj[u][i],u))
+                yellow_edges.append((u, adj[u][i]))
+                yellow_edges.append((adj[u][i], u))
                 node_color[adj[u][i]] = color[1]
                 show_edges()
                 show_nodes()
                 pygame.display.update()
                 pygame.time.delay(200)
                 dis[adj[u][i]] = dis[u] + 1
-                q.put(((level+1)%2,adj[u][i]))
-    
+                q.put(((level+1) % 2, adj[u][i]))
+
+
 def start_bfs(point):
-    if(len(nodes)==0 or len(edges)==0):
+    if(len(nodes) == 0 or len(edges) == 0):
         return
     adj = [[] for i in range(len(nodes))]
     dis = [1e9 for i in range(len(nodes))]
     for i in range(len(edges)):
         adj[edges[i][0]].append(edges[i][1])
-    bfs(point,dis,adj)
+    bfs(point, dis, adj)
 
-def find_bridges(u,counter,dfs_num,dfs_low,par,adj):
+
+def find_bridges(u, counter, dfs_num, dfs_low, par, adj):
     counter = counter + 1
     dfs_num[u] = counter
     dfs_low[u] = counter
     ch_count = 0
-    
+
     node_color[u] = color[1]
     show_edges()
     show_nodes()
     pygame.display.update()
     pygame.time.delay(200)
-    
+
     for i in range(len(adj[u])):
         v = adj[u][i]
         if par[u] == v:
             continue
         if dfs_num[v] == 0:
-            
-            yellow_edges.append((u,v))
-            yellow_edges.append((v,u))
+
+            yellow_edges.append((u, v))
+            yellow_edges.append((v, u))
             show_edges()
             show_nodes()
             pygame.display.update()
             pygame.time.delay(200)
-            
+
             ch_count = ch_count + 1
             par[v] = u
-            find_bridges(v,counter,dfs_num,dfs_low,par,adj)
-            dfs_low[u] = min(dfs_low[u],dfs_low[v])
-            
+            find_bridges(v, counter, dfs_num, dfs_low, par, adj)
+            dfs_low[u] = min(dfs_low[u], dfs_low[v])
+
             show = False
-            if par[u]!=-1 and dfs_low[v]>=dfs_num[u]:
+            if par[u] != -1 and dfs_low[v] >= dfs_num[u]:
                 show = True
                 node_color[u] = color[2]
-                
-            if dfs_low[v]>dfs_num[u]:
+
+            if dfs_low[v] > dfs_num[u]:
                 show = True
-                blue_edges.append((u,v))
-                blue_edges.append((v,u))
-                
+                blue_edges.append((u, v))
+                blue_edges.append((v, u))
+
             if show:
                 show_edges()
                 show_nodes()
                 pygame.display.update()
                 pygame.time.delay(500)
         else:
-            dfs_low[u] = min(dfs_low[u],dfs_num[v])
-            
-    if ch_count>1 and par[u]==-1:
+            dfs_low[u] = min(dfs_low[u], dfs_num[v])
+
+    if ch_count > 1 and par[u] == -1:
         node_color[u] = color[2]
         show_edges()
         show_nodes()
         pygame.display.update()
         pygame.time.delay(200)
 
+
 def start_finding_bridges():
     n = len(nodes)
     m = len(edges)
-    if(n==0 or m==0):
+    if(n == 0 or m == 0):
         return
     adj = [[] for i in range(n)]
     for i in range(m):
@@ -201,39 +212,47 @@ def start_finding_bridges():
     for i in range(n):
         if dfs_num[i] == 0:
             par[i] = -1
-            find_bridges(i,counter,dfs_num,dfs_low,par,adj)
+            find_bridges(i, counter, dfs_num, dfs_low, par, adj)
             counter = 0
-    
+
+
 def make_equal(listA, listB):
     for i in range(len(listA)):
-        listA[i] =listB[i]
+        listA[i] = listB[i]
 
-def isClicked(x1,y1,x2,y2,mos_x,mos_y):
-    if mos_x>x1 and (mos_x<x2):
+
+def isClicked(x1, y1, x2, y2, mos_x, mos_y):
+    if mos_x > x1 and (mos_x < x2):
         x_inside = True
-    else: x_inside = False
-    if mos_y>y1 and (mos_y<y2):
+    else:
+        x_inside = False
+    if mos_y > y1 and (mos_y < y2):
         y_inside = True
-    else: y_inside = False
+    else:
+        y_inside = False
     if x_inside and y_inside:
         return True
     else:
         return False
 
-def ishovering(x1,y1,x2,y2):
+
+def ishovering(x1, y1, x2, y2):
     mos_x, mos_y = pygame.mouse.get_pos()
-    if mos_x>x1 and (mos_x<x2):
+    if mos_x > x1 and (mos_x < x2):
         x_inside = True
-    else: x_inside = False
-    if mos_y>y1 and (mos_y<y2):
+    else:
+        x_inside = False
+    if mos_y > y1 and (mos_y < y2):
         y_inside = True
-    else: y_inside = False
+    else:
+        y_inside = False
     if x_inside and y_inside:
         return True
     else:
         return False
 
-def getNode(mos_x,mos_y):
+
+def getNode(mos_x, mos_y):
     for i in range(len(nodes)):
         x1 = nodes[i][0]
         y1 = nodes[i][1]
@@ -241,134 +260,158 @@ def getNode(mos_x,mos_y):
             return i
     return -1
 
+
 def show_nodes():
-    if(len(nodes)==0): return
+    if(len(nodes) == 0):
+        return
     for i in range(len(nodes)):
-        screen.blit(node_color[i],nodes[i])
+        screen.blit(node_color[i], nodes[i])
+
 
 def show_weight_edges():
-    if(len(edges)==0): return
+    if(len(edges) == 0):
+        return
     for i in range(len(edges)):
         # write node text
         text_surface = msg_font.render(weight_edges[i], True, (0, 0, 0))
-        screen.blit(text_surface, ((nodes[edges[i][0]][0]+16 + nodes[edges[i][1]][0]+16) / 2, (nodes[edges[i][0]][1]+16 + nodes[edges[i][1]][1]+16) / 2))
+        screen.blit(text_surface, ((nodes[edges[i][0]][0]+16 + nodes[edges[i][1]]
+                    [0]+16) / 2, (nodes[edges[i][0]][1]+16 + nodes[edges[i][1]][1]+16) / 2))
+
+
 def show_nodes_name():
-    if(len(nodes)==0): return
+    if(len(nodes) == 0):
+        return
     for i in range(len(nodes)):
         # write node text
         text_surface = msg_font.render(nodes_name[i], True, (0, 0, 0))
         screen.blit(text_surface, (nodes[i][0], nodes[i][1] + 30))
+
+
 def show_edges():
-    if(len(edges)==0): return
+    if(len(edges) == 0):
+        return
     for i in range(len(edges)):
-            pygame.draw.line(screen,BLACK,(nodes[edges[i][0]][0]+16,nodes[edges[i][0]][1]+16),(nodes[edges[i][1]][0]+16,nodes[edges[i][1]][1]+16),1)
+        pygame.draw.line(screen, BLACK, (nodes[edges[i][0]][0]+16, nodes[edges[i][0]]
+                         [1]+16), (nodes[edges[i][1]][0]+16, nodes[edges[i][1]][1]+16), 1)
     for i in range(len(yellow_edges)):
-            pygame.draw.line(screen,YELLOW,(nodes[yellow_edges[i][0]][0]+16,nodes[yellow_edges[i][0]][1]+16),(nodes[yellow_edges[i][1]][0]+16,nodes[yellow_edges[i][1]][1]+16),1)
+        pygame.draw.line(screen, YELLOW, (nodes[yellow_edges[i][0]][0]+16, nodes[yellow_edges[i][0]]
+                         [1]+16), (nodes[yellow_edges[i][1]][0]+16, nodes[yellow_edges[i][1]][1]+16), 1)
     for i in range(len(blue_edges)):
-            pygame.draw.line(screen,BLUE,(nodes[blue_edges[i][0]][0]+16,nodes[blue_edges[i][0]][1]+16),(nodes[blue_edges[i][1]][0]+16,nodes[blue_edges[i][1]][1]+16),2)
+        pygame.draw.line(screen, BLUE, (nodes[blue_edges[i][0]][0]+16, nodes[blue_edges[i][0]]
+                         [1]+16), (nodes[blue_edges[i][1]][0]+16, nodes[blue_edges[i][1]][1]+16), 2)
+
 
 def show_buttons():
     if(state == 'start'):
-        screen.blit(algo_button,(7,342))
-        screen.blit(dijkstra_button,(7+algo_button.get_width()/2-20,342+algo_button.get_height()/2-13))
-        screen.blit(algo_button,(7,550))
-        screen.blit(clear_button,(7+algo_button.get_width()/2-53,550+algo_button.get_height()/2-13))
-        screen.blit(algo_button,(7,498))
-        screen.blit(dfs_button,(7+algo_button.get_width()/2-20,498+algo_button.get_height()/2-13))
-        screen.blit(algo_button,(7,446))
-        screen.blit(bfs_button,(7+algo_button.get_width()/2-20,446+algo_button.get_height()/2-13))
-        screen.blit(algo_button,(7,394))
-        screen.blit(find_bridges_button,(7+algo_button.get_width()/2-50,394+algo_button.get_height()/2-13))
-        
+        screen.blit(algo_button, (7, 342))
+        screen.blit(dijkstra_button, (7+algo_button.get_width() /
+                    2-20, 342+algo_button.get_height()/2-13))
+        screen.blit(algo_button, (7, 550))
+        screen.blit(clear_button, (7+algo_button.get_width() /
+                    2-53, 550+algo_button.get_height()/2-13))
+        screen.blit(algo_button, (7, 498))
+        screen.blit(dfs_button, (7+algo_button.get_width() /
+                    2-20, 498+algo_button.get_height()/2-13))
+        screen.blit(algo_button, (7, 446))
+        screen.blit(bfs_button, (7+algo_button.get_width() /
+                    2-20, 446+algo_button.get_height()/2-13))
+        screen.blit(algo_button, (7, 394))
+        screen.blit(find_bridges_button, (7+algo_button.get_width() /
+                    2-50, 394+algo_button.get_height()/2-13))
+
+
 def show_msg():
     msg_box = msg_font.render(msg, True, BLUE)
-    screen.blit(msg_box,(215,570))
-    
-    
+    screen.blit(msg_box, (215, 570))
+
+
 def run():
-    global screen, nodes, edges, yellow_edges, blue_edges, color, node_color,pos, pointA, pointB, point, state, node_button, edge_button, msg, user_text, weight_edges
+    global screen, nodes, edges, yellow_edges, blue_edges, color, node_color, pos, pointA, pointB, point, state, node_button, edge_button, msg, user_text, weight_edges
     running = True
 
     while running:
         screen.fill(WHITE)
-        screen.blit(left_background,(0,0))
-        
+        screen.blit(left_background, (0, 0))
+
         if(state == 'start' or state == 'add_node' or state == 'exit'):
-            screen.blit(node_button,(5,5))
-            
+            screen.blit(node_button, (5, 5))
+
         if(state == 'start' or state == 'add_edge1' or state == 'add_edge2'):
-            screen.blit(edge_button,(5,42))
-            
+            screen.blit(edge_button, (5, 42))
+
         show_buttons()
         show_msg()
-        
+
         if state == 'start':
             node_button = plus
             edge_button = add
-            if(ishovering(5,5,5+node_button.get_width(),5+node_button.get_height())):
-                screen.blit(add_node,(60,12))
-            if(ishovering(5,42,5+edge_button.get_width(),42+edge_button.get_height())):
-                screen.blit(add_edge,(60,48))
-                
+            if(ishovering(5, 5, 5+node_button.get_width(), 5+node_button.get_height())):
+                screen.blit(add_node, (60, 12))
+            if(ishovering(5, 42, 5+edge_button.get_width(), 42+edge_button.get_height())):
+                screen.blit(add_edge, (60, 48))
+
         if state == 'dfs':
             temp_node = [color[0] for i in range(len(node_color))]
-            make_equal(temp_node,node_color)
+            make_equal(temp_node, node_color)
             start_dfs(point)
-            make_equal(node_color,temp_node)
+            make_equal(node_color, temp_node)
             yellow_edges.clear()
-            state = 'start'  
+            state = 'start'
             point = -1
-            
+
         if state == 'bfs':
             temp_node = [color[0] for i in range(len(node_color))]
-            make_equal(temp_node,node_color)
+            make_equal(temp_node, node_color)
             start_bfs(point)
-            make_equal(node_color,temp_node)
+            make_equal(node_color, temp_node)
             yellow_edges.clear()
-            state = 'start'  
+            state = 'start'
             point = -1
-        
+
         if state == 'find_bridges':
             temp_node = [color[0] for i in range(len(node_color))]
-            make_equal(temp_node,node_color)
+            make_equal(temp_node, node_color)
             start_finding_bridges()
             state = 'exit'
-            
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-                break;
+                break
             if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
-                if(pos[0]!=-1 & pos[1]!=-1):
+                if(pos[0] != -1 & pos[1] != -1):
                     if state == 'start':
-                        if(isClicked(7,498,7+algo_button.get_width(),498+algo_button.get_height(),pos[0],pos[1])):
+                        if(isClicked(7, 498, 7+algo_button.get_width(), 498+algo_button.get_height(), pos[0], pos[1])):
                             if len(nodes) != 0:
                                 state = 'choose start point for dfs'
                                 msg = 'Chọn điểm bắt đầu cho thuật toán Depth First Search.'
-                            else: state = 'start'
-                        elif(isClicked(5,5,5+node_button.get_width(),5+node_button.get_height(),pos[0],pos[1])):
+                            else:
+                                state = 'start'
+                        elif(isClicked(5, 5, 5+node_button.get_width(), 5+node_button.get_height(), pos[0], pos[1])):
                             state = 'add_node'
                             msg = 'Chọn vào màn hình để thêm nhà máy.'
                             node_button = cross
                             edge_button = cross
-                        elif(isClicked(5,42,5+edge_button.get_width(),42+edge_button.get_height(),pos[0],pos[1])):
+                        elif(isClicked(5, 42, 5+edge_button.get_width(), 42+edge_button.get_height(), pos[0], pos[1])):
                             msg = 'Chọn điểm bắt đầu thực hiện đặt khoảng cách.'
                             state = 'add_edge1'
                             node_button = cross
                             edge_button = cross
-                        elif(isClicked(7,446,7+algo_button.get_width(),446+algo_button.get_height(),pos[0],pos[1])):
+                        elif(isClicked(7, 446, 7+algo_button.get_width(), 446+algo_button.get_height(), pos[0], pos[1])):
                             if len(nodes) != 0:
                                 state = 'choose start point for bfs'
                                 msg = 'Chọn điểm bắt đầu cho thuật toán Breadth First Search.'
-                            else: state = 'start'
-                        elif(isClicked(7,394,7+algo_button.get_width(),394+algo_button.get_height(),pos[0],pos[1])):
+                            else:
+                                state = 'start'
+                        elif(isClicked(7, 394, 7+algo_button.get_width(), 394+algo_button.get_height(), pos[0], pos[1])):
                             if len(nodes) != 0:
                                 node_button = cross
                                 state = 'find_bridges'
                                 msg = 'Giải thích: Vùng tròn màu vàng thể hiện nhà máy   Đường đi: đường kẻ màu xanh'
-                            else: state = 'start'
-                        elif(isClicked(7,550,7+algo_button.get_width(),550+algo_button.get_height(),pos[0],pos[1])):
+                            else:
+                                state = 'start'
+                        elif(isClicked(7, 550, 7+algo_button.get_width(), 550+algo_button.get_height(), pos[0], pos[1])):
                             print('nodes')
                             print(nodes)
                             print(node_color)
@@ -382,71 +425,73 @@ def run():
                             nodes_name.clear()
                             weight_edges.clear()
                     elif state == 'add_node':
-                        if pos[0]>200 and pos[1]<550:
+                        if pos[0] > 200 and pos[1] < 550:
                             node_color.append(color[0])
-                            user_text = write_text(pygame, screen, user_text, 'Nhập tên nhà máy')
-                            nodes.append((pos[0]-16,pos[1]-16))
+                            user_text = write_text(
+                                pygame, screen, user_text, 'Nhập tên nhà máy')
+                            nodes.append((pos[0]-16, pos[1]-16))
                             nodes_name.append(user_text)
                             user_text = ''
-                            
+
                             state = 'add_node'
                             msg = ''
-                        if(isClicked(5,5,5+node_button.get_width(),5+node_button.get_height(),pos[0],pos[1])):
+                        if(isClicked(5, 5, 5+node_button.get_width(), 5+node_button.get_height(), pos[0], pos[1])):
                             state = 'start'
                             msg = ''
                     elif state == 'add_name_of_node':
-                        screen.blit(add_node,(60,12))
+                        screen.blit(add_node, (60, 12))
                     elif state == 'add_edge1':
-                        pointA = getNode(pos[0],pos[1])
+                        pointA = getNode(pos[0], pos[1])
                         if(pointA != -1):
                             state = 'add_edge2'
                             msg = 'Chọn nhà máy bắt đầu đường đi.'
-                        if(isClicked(5,42,5+edge_button.get_width(),42+edge_button.get_height(),pos[0],pos[1])):
+                        if(isClicked(5, 42, 5+edge_button.get_width(), 42+edge_button.get_height(), pos[0], pos[1])):
                             state = 'start'
                             msg = ''
                     elif state == 'add_edge2':
-                        pointB = getNode(pos[0],pos[1])
+                        pointB = getNode(pos[0], pos[1])
                         if pointB != -1 and pointB != pointA:
-                            edges.append((pointA,pointB))
-                            edges.append((pointB,pointA))
+                            edges.append((pointA, pointB))
+                            edges.append((pointB, pointA))
                             state = 'add_edge1'
                             msg = 'Chọn nhà máy kết thúc đường đi.'
                             pointA = -1
                             pointB = -1
 
-                            user_text = write_text(pygame, screen, user_text, 'Nhập độ dài đường đi')
+                            user_text = write_text(
+                                pygame, screen, user_text, 'Nhập độ dài đường đi')
                             weight_edges.append(user_text)
                             weight_edges.append(user_text)
                             user_text = ''
-                        if(isClicked(5,42,5+edge_button.get_width(),42+edge_button.get_height(),pos[0],pos[1])):
+                        if(isClicked(5, 42, 5+edge_button.get_width(), 42+edge_button.get_height(), pos[0], pos[1])):
                             state = 'start'
                             msg = ''
                     elif state == 'choose start point for dfs':
-                        point  = getNode(pos[0],pos[1])
+                        point = getNode(pos[0], pos[1])
                         if point != -1:
                             state = 'dfs'
                             msg = ''
                     elif state == 'choose start point for bfs':
-                        point  = getNode(pos[0],pos[1])
+                        point = getNode(pos[0], pos[1])
                         if point != -1:
                             state = 'bfs'
                             msg = ''
                     elif state == 'exit':
-                        if(isClicked(5,5,5+node_button.get_width(),5+node_button.get_height(),pos[0],pos[1])):
-                            make_equal(node_color,temp_node)
+                        if(isClicked(5, 5, 5+node_button.get_width(), 5+node_button.get_height(), pos[0], pos[1])):
+                            make_equal(node_color, temp_node)
                             yellow_edges.clear()
                             blue_edges.clear()
                             nodes_name.clear()
                             weight_edges.clear()
                             state = 'start'
                             msg = ''
-                pos = (-1,-1)
-                
+                pos = (-1, -1)
+
         show_edges()
         show_nodes()
         show_nodes_name()
         show_weight_edges()
         pygame.display.update()
         clock.tick(60)
-        
+
     pygame.quit()
