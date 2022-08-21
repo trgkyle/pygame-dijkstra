@@ -42,14 +42,14 @@ msg_box = msg_font.render('', True, BLUE);
 
 node_button = plus
 edge_button = add
-nodes = []
-nodes_name = []
-edges = []
+nodes = [(217, 137), (333, 17), (438, 135), (324, 260), (572, 15), (564, 260), (671, 141)]
+nodes_name = ['NMN. song Hồng', 'NMN. Cáo Đỉnh', 'NMC. Ngọc Hà', 'NMC. Mai Dịch', 'NMC. Yên Phụ', 'NMC. Ngô Sỹ Liên', 'NMC. Lương Yên']
+edges = [(0, 1), (1, 0), (0, 3), (3, 0), (0, 2), (2, 0), (3, 2), (2, 3), (2, 4), (4, 2), (2, 5), (5, 2), (5, 6), (6, 5), (4, 6), (6, 4), (1, 2), (2, 1), (3, 5), (5, 3)]
 yellow_edges = []
 blue_edges = []
-weight_edges = []
+weight_edges = ['14.1', '14.1', '16.8', '16.8', '18.6', '18.6', '2.4', '2.4', '5.2', '5.2', '4.3', '4.3', '5.4', '5.4', '5.3', '5.3', '6.3', '6.3', '7.8', '7.8']
 color = [node2,node1,node3]
-node_color = []
+node_color = [color[0], color[0], color[0], color[0], color[0], color[0], color[0]]
 pos = (-1,-1)
 pointA = -1
 pointB = -1
@@ -369,6 +369,13 @@ def run():
                                 msg = 'Giải thích: Vùng tròn màu vàng thể hiện nhà máy   Đường đi: đường kẻ màu xanh'
                             else: state = 'start'
                         elif(isClicked(7,550,7+algo_button.get_width(),550+algo_button.get_height(),pos[0],pos[1])):
+                            print('nodes')
+                            print(nodes)
+                            print(node_color)
+                            print(nodes_name)
+                            print(edges)
+                            print(nodes_name)
+                            print(weight_edges)
                             nodes.clear()
                             node_color.clear()
                             edges.clear()
