@@ -44,7 +44,7 @@ node_button = plus
 edge_button = add
 nodes = [(217, 137), (333, 17), (438, 135), (324, 260),
          (572, 15), (564, 260), (671, 141)]
-nodes_name = ['NMN. song Hồng', 'NMN. Cáo Đỉnh', 'NMC. Ngọc Hà',
+nodes_name = ['NMN. sông Hồng', 'NMN. Cáo Đỉnh', 'NMC. Ngọc Hà',
               'NMC. Mai Dịch', 'NMC. Yên Phụ', 'NMC. Ngô Sỹ Liên', 'NMC. Lương Yên']
 edges = [(0, 1), (1, 0), (0, 3), (3, 0), (0, 2), (2, 0), (3, 2), (2, 3), (2, 4), (4, 2),
          (2, 5), (5, 2), (5, 6), (6, 5), (4, 6), (6, 4), (1, 2), (2, 1), (3, 5), (5, 3)]
