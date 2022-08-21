@@ -54,7 +54,7 @@ msg = ''
 user_text = ''
 
 
-def dijkstra(pointA, pointB, dis, adj):
+def dijkstra(pointA, pointB, dis, adj, adj_from_pointA, dis_from_pointA):
     if(pointA == pointB):
         return
     level = 0
@@ -83,9 +83,31 @@ def dijkstra(pointA, pointB, dis, adj):
             show_nodes()
             pygame.display.update()
             pygame.time.delay(200)
-            # dis[adj[u][i]] = dis[u] + 1
+            print("START****")
+            if(dis_from_pointA[adj[u][i]] <= dis_from_pointA[u] + weight_edges[edges.index((u, adj[u][i]))]):
+                continue
+                
+            print("current node: ",u)
+            print("related node: ",adj[u][i])
+            adj_from_pointA[adj[u][i]] = adj_from_pointA[u][:]
+            adj_from_pointA[adj[u][i]].append(adj[u][i])
+            # Pricing to go related node
+            dis_from_pointA[adj[u][i]] = dis_from_pointA[u] + weight_edges[edges.index((u, adj[u][i]))]
+            print("price to go related node: ",dis_from_pointA[adj[u][i]])
+            print("current step to go to related node: ")
+            print(adj_from_pointA)
+            print("END****")
+            
             q.put(((level+1) % 2, adj[u][i]))
     msg = 'Hoàn thành tìm đường đi!'
+    print('Done.... ')
+    if(len(adj_from_pointA[pointB]) == 0):
+        msg = 'Không có đường đi!'
+    else:
+        print('Return best route: ')
+        print(adj_from_pointA[pointB])
+        print('price to go to best route: ')
+        print(dis_from_pointA[pointB])
 
 def dfs(s, vis, adj):
     vis[s] = 1
@@ -162,6 +184,11 @@ def start_dijkstra(pointA, pointB):
         return
     adj = [[] for i in range(len(nodes))]
     dis = [[] for i in range(len(nodes))]
+    adj_from_pointA = [[] for i in range(len(nodes))]
+    dis_from_pointA = [1e9 for i in range(len(nodes))]
+    
+    adj_from_pointA[pointA] = [pointA]
+    dis_from_pointA[pointA] = 0
     for i in range(len(edges)):
         adj[edges[i][0]].append(edges[i][1])
         dis[edges[i][0]].append(weight_edges[i])
@@ -171,7 +198,7 @@ def start_dijkstra(pointA, pointB):
     print(adj)
     print("Khoảng cách của các điểm mà nó được kết nối tới (ứng với trị ví mảng) <dis>:")
     print(dis)
-    dijkstra(pointA, pointB, dis, adj)
+    dijkstra(pointA, pointB, dis, adj, adj_from_pointA, dis_from_pointA)
 
 
 def find_bridges(u, counter, dfs_num, dfs_low, par, adj):
