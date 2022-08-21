@@ -71,22 +71,25 @@ user_text = ''
 
 
 def dijkstra(pointA, pointB, dis, adj):
-    print("start dijkstra")
-    # vis[s] = 1
-    # node_color[s] = color[1]
-    # show_edges()
-    # show_nodes()
-    # pygame.display.update()
-    # pygame.time.delay(200)
-    # for i in range(len(adj[s])):
-    #     if vis[adj[s][i]] != 1:
-    #         yellow_edges.append((s, adj[s][i]))
-    #         yellow_edges.append((adj[s][i], s))
-    #         show_edges()
-    #         show_nodes()
-    #         pygame.display.update()
-    #         pygame.time.delay(200)
-    #         dfs(adj[s][i], vis, adj)
+    node_color[pointA] = color[1]
+    show_edges()
+    show_nodes()
+    show_nodes_name()
+    show_weight_edges()
+    pygame.display.update()
+    pygame.time.delay(500)
+    
+    if(pointA == pointB):
+        return
+    for i in range(len(adj[pointA])):
+        if dis[adj[pointA][i]] != 1:
+            yellow_edges.append((pointA, adj[pointA][i]))
+            yellow_edges.append((adj[pointA][i], pointA))
+            show_edges()
+            show_nodes()
+            pygame.display.update()
+            pygame.time.delay(200)
+            dijkstra(adj[pointA][i], pointB, dis, adj)
 
 
 def dfs(s, vis, adj):
