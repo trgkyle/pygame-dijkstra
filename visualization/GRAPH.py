@@ -114,75 +114,6 @@ def dijkstra(pointA, pointB, dis, adj, adj_from_pointA, dis_from_pointA):
         print('Total price to go to best route: ')
         print(best_price)
 
-def dfs(s, vis, adj):
-    vis[s] = 1
-    node_color[s] = color[1]
-    show_edges()
-    show_nodes()
-    pygame.display.update()
-    pygame.time.delay(200)
-    for i in range(len(adj[s])):
-        if vis[adj[s][i]] != 1:
-            yellow_edges.append((s, adj[s][i]))
-            yellow_edges.append((adj[s][i], s))
-            show_edges()
-            show_nodes()
-            pygame.display.update()
-            pygame.time.delay(200)
-            dfs(adj[s][i], vis, adj)
-
-
-def start_dfs(point):
-    if(len(nodes) == 0 or len(edges) == 0):
-        return
-    adj = [[] for i in range(len(nodes))]
-    vis = [0 for i in range(len(nodes))]
-    for i in range(len(edges)):
-        adj[edges[i][0]].append(edges[i][1])
-    dfs(point, vis, adj)
-
-
-def bfs(s, dis, adj):
-    level = 0
-    q = queue.Queue()
-    q.put((level, s))
-    global screen, nodes
-    dis[s] = 0
-    node_color[s] = color[1]
-    show_edges()
-    show_nodes()
-    pygame.display.update()
-    pygame.time.delay(200)
-
-    while not q.empty():
-        f = q.queue[0]
-        if(f[0] == (level+1) % 2):
-            level = (level+1) % 2
-            continue
-        q.get()
-        u = f[1]
-        for i in range(len(adj[u])):
-            if dis[adj[u][i]] == 1e9:
-                yellow_edges.append((u, adj[u][i]))
-                yellow_edges.append((adj[u][i], u))
-                node_color[adj[u][i]] = color[1]
-                show_edges()
-                show_nodes()
-                pygame.display.update()
-                pygame.time.delay(200)
-                dis[adj[u][i]] = dis[u] + 1
-                q.put(((level+1) % 2, adj[u][i]))
-
-
-def start_bfs(point):
-    if(len(nodes) == 0 or len(edges) == 0):
-        return
-    adj = [[] for i in range(len(nodes))]
-    dis = [1e9 for i in range(len(nodes))]
-    for i in range(len(edges)):
-        adj[edges[i][0]].append(edges[i][1])
-    bfs(point, dis, adj)
-
 
 def start_dijkstra(pointA, pointB):
     if(len(nodes) == 0 or len(edges) == 0):
@@ -204,83 +135,6 @@ def start_dijkstra(pointA, pointB):
     print("Khoảng cách của các điểm mà nó được kết nối tới (ứng với trị ví mảng) <dis>:")
     print(dis)
     dijkstra(pointA, pointB, dis, adj, adj_from_pointA, dis_from_pointA)
-
-
-def find_bridges(u, counter, dfs_num, dfs_low, par, adj):
-    counter = counter + 1
-    dfs_num[u] = counter
-    dfs_low[u] = counter
-    ch_count = 0
-
-    node_color[u] = color[1]
-    show_edges()
-    show_nodes()
-    pygame.display.update()
-    pygame.time.delay(200)
-
-    for i in range(len(adj[u])):
-        v = adj[u][i]
-        if par[u] == v:
-            continue
-        if dfs_num[v] == 0:
-
-            yellow_edges.append((u, v))
-            yellow_edges.append((v, u))
-            show_edges()
-            show_nodes()
-            pygame.display.update()
-            pygame.time.delay(200)
-
-            ch_count = ch_count + 1
-            par[v] = u
-            find_bridges(v, counter, dfs_num, dfs_low, par, adj)
-            dfs_low[u] = min(dfs_low[u], dfs_low[v])
-
-            show = False
-            if par[u] != -1 and dfs_low[v] >= dfs_num[u]:
-                show = True
-                node_color[u] = color[2]
-
-            if dfs_low[v] > dfs_num[u]:
-                show = True
-                blue_edges.append((u, v))
-                blue_edges.append((v, u))
-
-            if show:
-                show_edges()
-                show_nodes()
-                pygame.display.update()
-                pygame.time.delay(500)
-        else:
-            dfs_low[u] = min(dfs_low[u], dfs_num[v])
-
-    if ch_count > 1 and par[u] == -1:
-        node_color[u] = color[2]
-        show_edges()
-        show_nodes()
-        pygame.display.update()
-        pygame.time.delay(200)
-
-
-def start_finding_bridges():
-    n = len(nodes)
-    m = len(edges)
-    if(n == 0 or m == 0):
-        return
-    adj = [[] for i in range(n)]
-    for i in range(m):
-        adj[edges[i][0]].append(edges[i][1])
-    counter = 0
-    dfs_num = [0 for i in range(n)]
-    dfs_low = [0 for i in range(m)]
-    par = [0 for i in range(n)]
-    for i in range(n):
-        if dfs_num[i] == 0:
-            par[i] = -1
-            find_bridges(i, counter, dfs_num, dfs_low, par, adj)
-            counter = 0
-
-
 def make_equal(listA, listB):
     for i in range(len(listA)):
         listA[i] = listB[i]
@@ -393,23 +247,6 @@ def run():
         show_msg()
 
 
-        if state == 'dfs':
-            temp_node = [color[0] for i in range(len(node_color))]
-            make_equal(temp_node, node_color)
-            start_dfs(point)
-            make_equal(node_color, temp_node)
-            yellow_edges.clear()
-            state = 'start'
-            point = -1
-
-        if state == 'bfs':
-            temp_node = [color[0] for i in range(len(node_color))]
-            make_equal(temp_node, node_color)
-            start_bfs(point)
-            make_equal(node_color, temp_node)
-            yellow_edges.clear()
-            state = 'start'
-            point = -1
 
         if state == 'dijkstra':
             temp_node = [color[0] for i in range(len(node_color))]
@@ -419,13 +256,6 @@ def run():
             yellow_edges.clear()
             state = 'start'
             point = -1
-
-        if state == 'find_bridges':
-            temp_node = [color[0] for i in range(len(node_color))]
-            make_equal(temp_node, node_color)
-            start_finding_bridges()
-            state = 'exit'
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -448,58 +278,6 @@ def run():
                             else:
                                 state = 'start'
                                 msg = 'Phải có tối thiểu 2 điểm.'
-                    elif state == 'add_node':
-                        if pos[0] > 200 and pos[1] < 550:
-                            node_color.append(color[0])
-                            user_text = write_text(
-                                pygame, screen, user_text, 'Nhập tên nhà máy')
-                            nodes.append((pos[0]-16, pos[1]-16))
-                            nodes_name.append(user_text)
-                            user_text = ''
-
-                            state = 'add_node'
-                            msg = ''
-                        if(isClicked(5, 5, 5+node_button.get_width(), 5+node_button.get_height(), pos[0], pos[1])):
-                            state = 'start'
-                            msg = ''
-                    elif state == 'add_name_of_node':
-                        screen.blit(add_node, (60, 12))
-                    elif state == 'add_edge1':
-                        pointA = getNode(pos[0], pos[1])
-                        if(pointA != -1):
-                            state = 'add_edge2'
-                            msg = 'Chọn nhà máy bắt đầu đường đi.'
-                        if(isClicked(5, 42, 5+edge_button.get_width(), 42+edge_button.get_height(), pos[0], pos[1])):
-                            state = 'start'
-                            msg = ''
-                    elif state == 'add_edge2':
-                        pointB = getNode(pos[0], pos[1])
-                        if pointB != -1 and pointB != pointA:
-                            edges.append((pointA, pointB))
-                            edges.append((pointB, pointA))
-                            state = 'add_edge1'
-                            msg = 'Chọn nhà máy kết thúc đường đi.'
-                            pointA = -1
-                            pointB = -1
-
-                            user_text = write_text(
-                                pygame, screen, user_text, 'Nhập độ dài đường đi')
-                            weight_edges.append(user_text)
-                            weight_edges.append(user_text)
-                            user_text = ''
-                        if(isClicked(5, 42, 5+edge_button.get_width(), 42+edge_button.get_height(), pos[0], pos[1])):
-                            state = 'start'
-                            msg = ''
-                    elif state == 'choose start point for dfs':
-                        point = getNode(pos[0], pos[1])
-                        if point != -1:
-                            state = 'dfs'
-                            msg = ''
-                    elif state == 'choose start point for bfs':
-                        point = getNode(pos[0], pos[1])
-                        if point != -1:
-                            state = 'bfs'
-                            msg = ''
                     elif state == 'choose start point for dijkstra':
                         pointA = getNode(pos[0], pos[1])
                         if pointA != -1:
