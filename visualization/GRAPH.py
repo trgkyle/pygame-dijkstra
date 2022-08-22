@@ -44,6 +44,8 @@ weight_edges = [14.1, 16.8, 18.6, 2.4, 5.2, 4.3, 5.4, 5.3, 6.3, 7.8]
 color = [node2, node1, node3]
 node_color = [color[0], color[0], color[0],
               color[0], color[0], color[0], color[0]]
+adj_from_pointA = [[] for i in range(len(nodes))]
+dis_from_pointA = [1e9 for i in range(len(nodes))]
 pos = (-1, -1)
 pointA = -1
 pointB = -1
@@ -55,7 +57,7 @@ user_text = ''
 def showNodeName(index):
     return nodes_name[index]
 
-def dijkstra(pointA, pointB, dis, adj, adj_from_pointA, dis_from_pointA):
+def dijkstra(pointA, pointB, dis, adj):
     if(pointA == pointB):
         return
     level = 0
@@ -119,8 +121,6 @@ def start_dijkstra(pointA, pointB):
         return
     adj = [[] for i in range(len(nodes))]
     dis = [[] for i in range(len(nodes))]
-    adj_from_pointA = [[] for i in range(len(nodes))]
-    dis_from_pointA = [1e9 for i in range(len(nodes))]
     
     adj_from_pointA[pointA] = [pointA]
     dis_from_pointA[pointA] = 0
@@ -133,7 +133,7 @@ def start_dijkstra(pointA, pointB):
     print(adj)
     print("Khoảng cách của các điểm mà nó được kết nối tới (ứng với trị ví mảng) <dis>:")
     print(dis)
-    dijkstra(pointA, pointB, dis, adj, adj_from_pointA, dis_from_pointA)
+    dijkstra(pointA, pointB, dis, adj)
 def make_equal(listA, listB):
     for i in range(len(listA)):
         listA[i] = listB[i]
@@ -184,9 +184,6 @@ def show_nodes():
         return
     for i in range(len(nodes)):
         screen.blit(node_color[i], nodes[i])
-    if pointA != -1 and pointB != -1:
-       screen.blit(node3, nodes[pointA])
-       screen.blit(node3, nodes[pointB])
 
 
 def show_weight_edges():
@@ -198,6 +195,14 @@ def show_weight_edges():
         screen.blit(text_surface, ((nodes[edges[i][0]][0]+16 + nodes[edges[i][1]]
                     [0]+16) / 2, (nodes[edges[i][0]][1]+16 + nodes[edges[i][1]][1]+16) / 2))
 
+def show_dijkstra_result():
+    if pointA != -1 and pointB != -1:
+       screen.blit(node3, nodes[pointA])
+       screen.blit(node3, nodes[pointB])
+       for i in range(len(adj_from_pointA[pointB])):
+        screen.blit(node3, nodes[adj_from_pointA[pointB][i]])
+        if i < len(adj_from_pointA[pointB]) - 1:
+            blue_edges.append((adj_from_pointA[pointB][i], adj_from_pointA[pointB][i+1]))
 
 def show_nodes_name():
     if(len(nodes) == 0):
@@ -235,7 +240,7 @@ def show_msg():
 
 
 def run():
-    global screen, nodes, edges, blue_edges, color, node_color, pos, pointA, pointB, point, state, node_button, edge_button, msg, user_text, weight_edges
+    global screen, nodes, edges, blue_edges, color, node_color, pos, pointA, pointB, point, state, node_button, edge_button, msg, user_text, weight_edges, adj_from_pointA, dis_from_pointA
     running = True
 
     while running:
@@ -264,6 +269,9 @@ def run():
                 if(pos[0] != -1 & pos[1] != -1):
                     if state == 'start':
                         if(isClicked(7, 342, 7+algo_button.get_width(), 342+algo_button.get_height(), pos[0], pos[1])):
+                            adj_from_pointA = [[] for i in range(len(nodes))]
+                            dis_from_pointA = [1e9 for i in range(len(nodes))]
+                            blue_edges.clear()
                             if len(nodes) > 1:
                                 state = 'choose start point for dijkstra'
                                 msg = 'Choose start point for dijkstra.'
@@ -301,6 +309,7 @@ def run():
         show_nodes()
         show_nodes_name()
         show_weight_edges()
+        show_dijkstra_result()
         pygame.display.update()
         clock.tick(60)
 
