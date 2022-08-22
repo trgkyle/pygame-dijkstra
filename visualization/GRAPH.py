@@ -13,7 +13,7 @@ pygame.init()
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-YELLOW = (255, 255, 0)
+GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
 screen = pygame.display.set_mode((1000, 600))
@@ -219,7 +219,7 @@ def show_edges():
         pygame.draw.line(screen, BLACK, (nodes[edges[i][0]][0]+16, nodes[edges[i][0]]
                          [1]+16), (nodes[edges[i][1]][0]+16, nodes[edges[i][1]][1]+16), 1)
     for i in range(len(blue_edges)):
-        pygame.draw.line(screen, BLUE, (nodes[blue_edges[i][0]][0]+16, nodes[blue_edges[i][0]]
+        pygame.draw.line(screen, GREEN, (nodes[blue_edges[i][0]][0]+16, nodes[blue_edges[i][0]]
                          [1]+16), (nodes[blue_edges[i][1]][0]+16, nodes[blue_edges[i][1]][1]+16), 1)
 
 
