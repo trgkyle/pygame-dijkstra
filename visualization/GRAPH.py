@@ -39,7 +39,6 @@ nodes_name = ['NMN. sông Hồng', 'NMN. Cáo Đỉnh', 'NMN. Ngọc Hà',
               'NMN. Mai Dịch', 'NMN. Yên Phụ', 'NMN. Ngô Sỹ Liên', 'NMN. Lương Yên']
 edges = [(0, 1), (0, 3), (0, 2), (3, 2), (2, 4),
          (2, 5), (5, 6), (4, 6), (1, 2), (3, 5)]
-yellow_edges = []
 blue_edges = []
 weight_edges = [14.1, 16.8, 18.6, 2.4, 5.2, 4.3, 5.4, 5.3, 6.3, 7.8]
 color = [node2, node1, node3]
@@ -79,7 +78,7 @@ def dijkstra(pointA, pointB, dis, adj, adj_from_pointA, dis_from_pointA):
         q.get()
         u = f[1]
         for i in range(len(adj[u])):
-            yellow_edges.append((u, adj[u][i]))
+            blue_edges.append((u, adj[u][i]))
             node_color[adj[u][i]] = color[1]
             show_edges()
             show_nodes()
@@ -185,6 +184,9 @@ def show_nodes():
         return
     for i in range(len(nodes)):
         screen.blit(node_color[i], nodes[i])
+    if pointA != -1 and pointB != -1:
+       screen.blit(node3, nodes[pointA])
+       screen.blit(node3, nodes[pointB])
 
 
 def show_weight_edges():
@@ -212,12 +214,9 @@ def show_edges():
     for i in range(len(edges)):
         pygame.draw.line(screen, BLACK, (nodes[edges[i][0]][0]+16, nodes[edges[i][0]]
                          [1]+16), (nodes[edges[i][1]][0]+16, nodes[edges[i][1]][1]+16), 1)
-    for i in range(len(yellow_edges)):
-        pygame.draw.line(screen, YELLOW, (nodes[yellow_edges[i][0]][0]+16, nodes[yellow_edges[i][0]]
-                         [1]+16), (nodes[yellow_edges[i][1]][0]+16, nodes[yellow_edges[i][1]][1]+16), 1)
     for i in range(len(blue_edges)):
         pygame.draw.line(screen, BLUE, (nodes[blue_edges[i][0]][0]+16, nodes[blue_edges[i][0]]
-                         [1]+16), (nodes[blue_edges[i][1]][0]+16, nodes[blue_edges[i][1]][1]+16), 2)
+                         [1]+16), (nodes[blue_edges[i][1]][0]+16, nodes[blue_edges[i][1]][1]+16), 1)
 
 
 def show_buttons():
@@ -236,7 +235,7 @@ def show_msg():
 
 
 def run():
-    global screen, nodes, edges, yellow_edges, blue_edges, color, node_color, pos, pointA, pointB, point, state, node_button, edge_button, msg, user_text, weight_edges
+    global screen, nodes, edges, blue_edges, color, node_color, pos, pointA, pointB, point, state, node_button, edge_button, msg, user_text, weight_edges
     running = True
 
     while running:
@@ -253,7 +252,7 @@ def run():
             make_equal(temp_node, node_color)
             start_dijkstra(pointA, pointB)
             make_equal(node_color, temp_node)
-            yellow_edges.clear()
+            blue_edges.clear()
             state = 'start'
             point = -1
         for event in pygame.event.get():
@@ -291,7 +290,6 @@ def run():
                     elif state == 'exit':
                         if(isClicked(5, 5, 5+node_button.get_width(), 5+node_button.get_height(), pos[0], pos[1])):
                             make_equal(node_color, temp_node)
-                            yellow_edges.clear()
                             blue_edges.clear()
                             nodes_name.clear()
                             weight_edges.clear()
