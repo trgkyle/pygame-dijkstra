@@ -101,14 +101,14 @@ def dijkstra(pointA, pointB, dis, adj, adj_from_pointA, dis_from_pointA):
             print("END****")
             
             q.put(((level+1) % 2, adj[u][i]))
-    msg = 'Hoàn thành tìm đường đi!'
+    msg = 'Success find route!'
     print('Done.... ')
     if(len(adj_from_pointA[pointB]) == 0):
-        msg = 'Không có đường đi!'
+        msg = 'No route find!'
     else:
         best_route = str([nodes_name[index] for index in adj_from_pointA[pointB]])
         best_price = str(round(dis_from_pointA[pointB],2))
-        msg = 'Đường đi: ' + best_route + '\n' + 'Khoảng cách tối ưu: ' + str(best_price)
+        msg = 'Route: ' + best_route + '\n' + 'Best total distance: ' + str(best_price)
         print('Return best route: ')
         print(best_route)
         print('Total price to go to best route: ')
@@ -267,27 +267,27 @@ def run():
                         if(isClicked(7, 342, 7+algo_button.get_width(), 342+algo_button.get_height(), pos[0], pos[1])):
                             if len(nodes) > 1:
                                 state = 'choose start point for dijkstra'
-                                msg = 'Chọn điểm bắt đầu.'
+                                msg = 'Choose start point for dijkstra.'
                             else:
                                 state = 'start'
-                                msg = 'Phải có tối thiểu 2 điểm.'
+                                msg = 'Require 2 point to start.'
                         elif(isClicked(7, 550, 7+algo_button.get_width(), 550+algo_button.get_height(), pos[0], pos[1])):
                             if pointA != -1 and pointB != -1:
                                 state = 'dijkstra'
-                                msg = 'Bắt đầu chạy thuật toán dijkstra.'
+                                msg = 'Start running dijkstra algorithm.'
                             else:
                                 state = 'start'
-                                msg = 'Phải có tối thiểu 2 điểm.'
+                                msg = 'Require 2 point to start.'
                     elif state == 'choose start point for dijkstra':
                         pointA = getNode(pos[0], pos[1])
                         if pointA != -1:
                             state = 'choose end point for dijkstra'
-                            msg = 'Chọn điểm kết thúc'
+                            msg = 'Choose end point'
                     elif state == 'choose end point for dijkstra':
                         pointB = getNode(pos[0], pos[1])
                         if pointB != -1:
                             state = 'start'
-                            msg = 'Đã hoàn thành chọn điểm'
+                            msg = 'Success choose start and end point.'
                     elif state == 'exit':
                         if(isClicked(5, 5, 5+node_button.get_width(), 5+node_button.get_height(), pos[0], pos[1])):
                             make_equal(node_color, temp_node)
