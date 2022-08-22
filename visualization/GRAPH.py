@@ -33,8 +33,7 @@ dijkstra_button = button_font.render('Choose', True, WHITE)
 go_button = button_font.render('Go', True, WHITE)
 msg_box = msg_font.render('', True, BLUE)
 
-nodes = [(217, 137), (333, 17), (438, 135), (324, 260),
-         (572, 15), (564, 260), (671, 141)]
+nodes = [[317, 257], [433, 137], [538, 255], [424, 380], [672, 135], [664, 380], [771, 261]]
 nodes_name = ['NMN. sông Hồng', 'NMN. Cáo Đỉnh', 'NMN. Ngọc Hà',
               'NMN. Mai Dịch', 'NMN. Yên Phụ', 'NMN. Ngô Sỹ Liên', 'NMN. Lương Yên']
 edges = [(0, 1), (0, 3), (0, 2), (3, 2), (2, 4),
