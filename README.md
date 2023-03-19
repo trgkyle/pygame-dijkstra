@@ -1,13 +1,17 @@
-# Phần mềm hiển thị mô phỏng chạy thuật toán Dijkstra sử dụng PyGame
-## Hướng dẫn cách chạy Project cho ai đấy
+This is an application that displays a simulation of the Dijkstra algorithm using PyGame. 
+
+To run the project, execute 
 
 ```
 python3 main.py
 ```
 
-Các trường hợp chạy lỗi do thiếu thư viện vui lòng cài bằng câu lệnh
+
+In case of missing library errors, install them using 
 
 ```
 pip3 install <package_missing_name>
 ```
+
+
 
