@@ -13,5 +13,4 @@ In case of missing library errors, install them using
 pip3 install <package_missing_name>
 ```
 
-
-
+![Preview dijkstra](/docs/dijkstra.gif)
